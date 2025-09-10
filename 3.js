@@ -6,8 +6,8 @@ const token = '8395956317:AAHu7lAbS5Qi56EUD11bJRDi8oE-1jCpoCw';
 const bot = new TelegramBot(token, { polling: true });
 
 let ADMIN_IDS = [7818408538];
-const USER_COOLDOWN = 5 * 60 * 1000;
-const MAX_USER_DURATION = 100;
+const USER_COOLDOWN = 5 * 60 * 100;
+const MAX_USER_DURATION = 200;
 
 const lastUserAttackTime = {};
 
@@ -125,6 +125,7 @@ bot.onText(/\/add (\d+)/, (msg, match) => {
   ADMIN_IDS.push(newAdminId);
   bot.sendMessage(chatId, `✅ Đa them admin moi voi ID: ${newAdminId}`);
 });
+
 
 
 
